@@ -34,7 +34,6 @@ def create_database():
     ''')
     conn.commit()
     conn.close()
-create_database()
 
 def register_voter(name):
     conn = sqlite3.connect('voting_system.db')
