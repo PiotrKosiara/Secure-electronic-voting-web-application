@@ -1,19 +1,17 @@
 import sqlite3
+import hashlib
 
 def create_database():
     conn = sqlite3.connect('voting_system.db')
     c = conn.cursor()
-
-    # Table of voters
     c.execute('''
         CREATE TABLE IF NOT EXISTS voters (
             voter_id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
+            password TEXT NOT NULL,
             has_voted INTEGER DEFAULT 0
         )
     ''')
-
-    # Table of candidates
     c.execute('''
         CREATE TABLE IF NOT EXISTS candidates (
             candidate_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -21,8 +19,6 @@ def create_database():
             votes INTEGER DEFAULT 0
         )
     ''')
-
-    # Table of votes
     c.execute('''
         CREATE TABLE IF NOT EXISTS votes (
             vote_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,10 +31,14 @@ def create_database():
     conn.commit()
     conn.close()
 
-def register_voter(name):
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def register_voter(name, password):
     conn = sqlite3.connect('voting_system.db')
     c = conn.cursor()
-    c.execute('INSERT INTO voters (name) VALUES (?)', (name,))
+    hashed_password = hash_password(password)
+    c.execute('INSERT INTO voters (name, password, has_voted) VALUES (?, ?, 0)', (name, hashed_password))
     conn.commit()
     conn.close()
 
@@ -52,18 +52,16 @@ def add_candidate(name):
 def cast_vote(voter_id, candidate_id):
     conn = sqlite3.connect('voting_system.db')
     c = conn.cursor()
-    # Check, if voter already voted
     c.execute('SELECT has_voted FROM voters WHERE voter_id = ?', (voter_id,))
     result = c.fetchone()
     if result and result[0] == 0:
-        # Cast vote
         c.execute('INSERT INTO votes (voter_id, candidate_id) VALUES (?, ?)', (voter_id, candidate_id))
         c.execute('UPDATE voters SET has_voted = 1 WHERE voter_id = ?', (voter_id,))
         c.execute('UPDATE candidates SET votes = votes + 1 WHERE candidate_id = ?', (candidate_id,))
         conn.commit()
         print("You voted!")
     else:
-        print("You alreay cast your vote.")
+        print("You already cast your vote.")
     conn.close()
 
 def show_results():
@@ -75,5 +73,3 @@ def show_results():
     for row in results:
         print(f"{row[0]}: {row[1]} votes")
     conn.close()
-
-
