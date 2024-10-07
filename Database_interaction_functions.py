@@ -13,9 +13,11 @@ def create_database():
             conn.execute('''
                 CREATE TABLE IF NOT EXISTS voters (
                     voter_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    personal_id TEXT NOT NULL UNIQUE,
+                    personal_id TEXT NOT NULL,
                     password TEXT NOT NULL,
-                    has_voted INTEGER DEFAULT 0
+                    has_voted INTEGER DEFAULT 0,
+                    failed_attempts INTEGER DEFAULT 0,
+                    last_failed_attempt TIMESTAMP
                 );
             ''')
 
@@ -43,33 +45,38 @@ def create_database():
     finally:
         conn.close()
 
-def hash_password(password):
-    return hashlib.sha256(password.encode()).hexdigest()
+def hash_value(value):
+    return hashlib.sha256(value.encode()).hexdigest()
 
 
 def verify_voter_credentials(personal_id, password):
+    hashed_personal_id = hash_value(personal_id)
+    hashed_password = hash_value(password)
+    
     conn = sqlite3.connect('voting_system.db')
     c = conn.cursor()
-    c.execute('SELECT password, voter_id, has_voted FROM voters WHERE personal_id = ?', (personal_id,))
+    
+    c.execute('SELECT password, voter_id, has_voted FROM voters WHERE personal_id = ?', (hashed_personal_id,))
     result = c.fetchone()
     conn.close()
     
     if result:
         stored_password, voter_id, has_voted = result
-        hashed_password = hash_password(password)
         if stored_password == hashed_password:
             return voter_id, has_voted
+    
     return None, None
 
-def register_voter(personal_id, password):
+def register_voter(hashed_personal_id, hashed_password):
     try: 
         conn = sqlite3.connect('voting_system.db')
         c = conn.cursor()
-        hashed_password = hash_password(password)
-        c.execute('INSERT INTO voters (personal_id, password, has_voted) VALUES (?, ?, 0)', (personal_id, hashed_password))
+        # Store already hashed personal_id and password
+        c.execute('INSERT INTO voters (personal_id, password, has_voted) VALUES (?, ?, 0)', (hashed_personal_id, hashed_password))
         conn.commit()
+        print("Voter registered successfully.")
     except sqlite3.IntegrityError:
-        print(f"Voter '{personal_id}' already exists.")
+        print("Voter already exists.")
     finally:
         conn.close()
 
