@@ -1,0 +1,29 @@
+.u-section-1 .u-sheet-1 {
+  min-height: 407px;
+}
+
+.u-section-1 .u-custom-html-1 {
+  height: auto;
+  min-height: 211px;
+  width: 632px;
+  margin: 60px auto 0;
+}
+
+.u-section-1 .u-btn-1 {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 15px auto 60px;
+}
+
+@media (max-width: 767px) {
+  .u-section-1 .u-custom-html-1 {
+    width: 540px;
+  }
+}
+
+@media (max-width: 575px) {
+  .u-section-1 .u-custom-html-1 {
+    width: 340px;
+  }
+}
