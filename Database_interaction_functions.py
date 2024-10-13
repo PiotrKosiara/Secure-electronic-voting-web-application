@@ -1,5 +1,7 @@
 import sqlite3
 import hashlib
+import json
+from cryptography.fernet import Fernet
 
 def create_database():
     try:
@@ -14,6 +16,7 @@ def create_database():
                 CREATE TABLE IF NOT EXISTS voters (
                     voter_id INTEGER PRIMARY KEY AUTOINCREMENT,
                     personal_id TEXT NOT NULL,
+                    email TEXT NOT NULL UNIQUE,
                     password TEXT NOT NULL,
                     has_voted INTEGER DEFAULT 0,
                     failed_attempts INTEGER DEFAULT 0,
@@ -45,9 +48,26 @@ def create_database():
     finally:
         conn.close()
 
+
 def hash_value(value):
     return hashlib.sha256(value.encode()).hexdigest()
 
+def encrypt_value(value):
+    with open('key.json', 'r') as key_file:
+        stored_data = json.load(key_file)
+        stored_key = stored_data['key'].encode('utf-8')
+    cipher_suite = Fernet(stored_key)
+    value_2 = str(value).encode()
+    encrypted_value = cipher_suite.encrypt(value_2)
+    return encrypted_value
+
+def decrypt_value(encrypted_value):
+    with open('key.json', 'r') as key_file:
+        stored_data = json.load(key_file)
+        stored_key = stored_data['key'].encode('utf-8')
+    cipher_suite = Fernet(stored_key)
+    decrypted_value = cipher_suite.decrypt(encrypted_value).decode()
+    return decrypted_value
 
 def verify_voter_credentials(personal_id, password):
     hashed_personal_id = hash_value(personal_id)
@@ -67,12 +87,12 @@ def verify_voter_credentials(personal_id, password):
     
     return None, None
 
-def register_voter(hashed_personal_id, hashed_password):
+def register_voter(hashed_personal_id, hashed_password, enctypted_email):
     try: 
         conn = sqlite3.connect('voting_system.db')
         c = conn.cursor()
         # Store already hashed personal_id and password
-        c.execute('INSERT INTO voters (personal_id, password, has_voted) VALUES (?, ?, 0)', (hashed_personal_id, hashed_password))
+        c.execute('INSERT INTO voters (personal_id, password, email, has_voted) VALUES (?, ?, ?, 0)', (hashed_personal_id, hashed_password, enctypted_email))
         conn.commit()
         print("Voter registered successfully.")
     except sqlite3.IntegrityError:
