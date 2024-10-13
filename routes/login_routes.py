@@ -16,7 +16,7 @@ def ratelimit_handler(e):
 
 @login_blueprint.route("/", methods=["GET", "POST"])
 def main():
-    return render_template('index.html', error_message=None)
+    return render_template('login_1.html', error_message=None)
 
 @login_blueprint.route("/login", methods=["GET", "POST"])
 def login():
@@ -39,7 +39,7 @@ def login():
             if failed_attempts >= 3 and last_failed_attempt:
                 if today < last_failed_attempt + datetime.timedelta(minutes=1):
                     conn.close()
-                    return render_template('index.html', error_message="Account temporarily blocked.")
+                    return render_template('login_1.html', error_message="Account temporarily blocked.")
                 failed_attempts = 0
 
             if stored_password == hashed_password:
@@ -65,8 +65,8 @@ def login():
                 conn.commit()
                 conn.close()
                 error_message = "Incorrect username or password."
-                return render_template('index.html', error_message=error_message)
+                return render_template('login_1.html', error_message=error_message)
 
         conn.close()
    
-    return render_template('index.html')
+    return render_template('login_1.html')
