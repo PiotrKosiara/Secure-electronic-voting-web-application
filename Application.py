@@ -2,7 +2,7 @@ from flask import Flask
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from config import Config
-from routes import login_blueprint, vote_blueprint
+from routes import login_blueprint, vote_blueprint, login_2_blueprint
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -17,6 +17,7 @@ limiter = Limiter(
 # Register blueprints for routes
 app.register_blueprint(login_blueprint)
 app.register_blueprint(vote_blueprint)
+app.register_blueprint(login_2_blueprint)
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 import sqlite3
 from datetime import datetime
 from Database_interaction_functions import hash_value
-# reset_failed_attempts, increment_failed_attempts
 
 login_blueprint = Blueprint('login', __name__)
 
@@ -44,21 +43,17 @@ def login():
 
             if stored_password == hashed_password:
                 session.permanent = True
-                session['voter_id'] = voter_id
+                session['voter_id'] = voter_id  
                 session['has_voted'] = has_voted
 
-                # Successful login, reset failed attempts
+                # Reset failed attempts after successful login
                 c.execute('UPDATE voters SET failed_attempts = 0, last_failed_attempt = NULL WHERE voter_id = ?', (voter_id,))
                 conn.commit()
                 conn.close()
 
-                # Pass session duration to the vote route
-                # session_duration = app.permanent_session_lifetime.total_seconds()
-                # return redirect(url_for('vote', session_duration=session_duration))
-                return redirect(url_for('vote.vote'))
+                return redirect(url_for('login_2.main'))  
 
             else:
-                 # Increment failed attempts
                 failed_attempts += 1
                 c.execute('UPDATE voters SET failed_attempts = ?, last_failed_attempt = ? WHERE voter_id = ?', 
                           (failed_attempts, today.strftime('%Y-%m-%d %H:%M:%S'), voter_id))

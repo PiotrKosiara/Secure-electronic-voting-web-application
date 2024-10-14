@@ -18,6 +18,7 @@ def create_database():
                     personal_id TEXT NOT NULL,
                     email TEXT NOT NULL UNIQUE,
                     password TEXT NOT NULL,
+                    temporary_password TEXT DEFAULT NULL,
                     has_voted INTEGER DEFAULT 0,
                     failed_attempts INTEGER DEFAULT 0,
                     last_failed_attempt TIMESTAMP
@@ -46,7 +47,8 @@ def create_database():
     except Exception as e:
         print("An error occurred:", str(e))
     finally:
-        conn.close()
+        pass
+        #conn.close()
 
 
 def hash_value(value):
