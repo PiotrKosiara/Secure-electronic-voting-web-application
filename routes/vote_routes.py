@@ -13,6 +13,6 @@ def vote():
     remaining_time = int(Config.PERMANENT_SESSION_LIFETIME.total_seconds())
 
     if has_voted:
-        return render_template('Already_voted.html')
+        return render_template('already_voted.html')
     else:
-        return render_template('Vote.html', voter_id=voter_id, remaining_time=remaining_time)
+        return render_template('vote.html', voter_id=voter_id, remaining_time=remaining_time)

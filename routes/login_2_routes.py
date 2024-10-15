@@ -7,13 +7,13 @@ login_2_blueprint = Blueprint('login_2', __name__)
 
 @login_2_blueprint.route("/", methods=["GET", "POST"])
 def main():
-    voter_id = session['voter_id']
-    print(f"Voter ID from session in main: {voter_id}")  
+    # voter_id = session['voter_id']
+    # print(f"Voter ID from session in main: {voter_id}")  
     return render_template('login_2.html')
 
 @login_2_blueprint.route("/login_2", methods=["GET", "POST"])
 def login_2():
-    voter_id = session['voter_id']
+    voter_id = session.get('voter_id')
     print(f"Voter ID from session in login_2: {voter_id}")
     conn = sqlite3.connect('voting_system.db')
     c = conn.cursor()

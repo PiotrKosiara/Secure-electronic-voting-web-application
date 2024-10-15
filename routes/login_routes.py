@@ -51,7 +51,7 @@ def login():
                 conn.commit()
                 conn.close()
 
-                return redirect(url_for('login_2.main'))  
+                return redirect(url_for('login_2.login_2'))  
 
             else:
                 failed_attempts += 1
