@@ -8,7 +8,7 @@ Database_interaction_functions.add_candidate("Kandydat_B")
 # Only examples
 hashed_jan_id = hash_value("Jan")
 hashed_jan_password = hash_value("password1")
-encrypted_email_jan = encrypt_value("bin@gmail.com")
+encrypted_email_jan = encrypt_value("piotrek.kosiara@gmail.com")
 Database_interaction_functions.register_voter(hashed_jan_id, hashed_jan_password, encrypted_email_jan)
 
 hashed_anna_id = hash_value("Anna")
