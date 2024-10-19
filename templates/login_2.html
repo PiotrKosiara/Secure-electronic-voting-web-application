@@ -37,18 +37,21 @@
         <h6 class="u-align-center u-custom-font u-font-montserrat u-text u-text-default u-text-1">Please check your e-mail account&nbsp;<br>for the verification code
         </h6>
         <div class="u-align-center u-form u-form-1">
-          <form action="https://forms.nicepagesrv.com/v2/form/process" class="u-clearfix u-form-spacing-10 u-form-vertical u-inner-form" source="email" name="form" style="padding: 10px;">
-            <div class="u-form-email u-form-group">
-              <label for="email-69d0" class="u-label">Code:</label>
-              <input type="email" placeholder="Enter the code" id="email-69d0" name="email" class="u-input u-input-rectangle" required="">
+          <form action="/login_2" class="u-clearfix u-form-custom-backend u-form-spacing-10 u-form-vertical u-inner-form" source="custom" name="form" style="padding: 10px;" method="POST">
+            <div class="u-form-group u-form-password u-label-top">
+                <label for="password" class="u-label">Code *</label>
+                <input type="password" placeholder="Enter your Code" id="code" name="code" class="u-input u-input-rectangle u-none u-input-2" required autocomplete="current-password">
             </div>
-
-            <div class="u-align-center u-form-group u-form-submit">
-              <button type="submit">Check</button>
-          </div>
-            <div class="u-form-send-message u-form-send-success"> Dziękujemy! Twoja wiadomość została wysłana! </div>
-            <div class="u-form-send-error u-form-send-message"> Przepraszamy, wiadomość nie mogła zostać wysłana. Popraw błędy i spróbuj ponownie. </div>
-          </form>
+            <!-- Submit Button -->
+            <div class="u-align-left u-form-group u-form-submit u-label-top">
+                <button type="submit">Login</button>
+            </div>
+            <!-- Error Message Display -->
+            {% if error_code %}
+            <div class="error-message">
+                {{ error_code }}
+            </div>
+            {% endif %}
         </div>
       </div>
     </section>

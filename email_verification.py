@@ -55,6 +55,7 @@ def two_step_verification(to):
     service = authenticate_gmail()
     # e-maila data
     verification_code = ''.join([str(random.randint(0, 9)) for _ in range(6)])
+    print(verification_code)
     sender = "votingsystembus@gmail.com"
     subject = "Your Verification Code - e-voting system"
     message_text = f"Your verification code is: {verification_code}"
@@ -62,4 +63,4 @@ def two_step_verification(to):
     return verification_code
 
 
-# two_step_verification("emilia.anczarska@gmail.com")
+#two_step_verification("emilia.anczarska@gmail.com")
