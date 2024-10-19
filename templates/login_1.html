@@ -6,8 +6,8 @@
     <meta name="description" content="">
     <title>Login_1</title>
     <link rel="stylesheet" href="//capp.nicepage.com/8d2365ca6c95e1464cb560debbd4965f357ed44e/nicepage.css" media="screen">
-    <link rel="stylesheet" href="../static/css/nicepage-site.css" media="screen">
-    <link rel="stylesheet" href="../static/css/Login_1.css" media="screen">
+    <link rel="stylesheet" href="static/css/nicepage-site.css" media="screen">
+    <link rel="stylesheet" href="static/css/Login_1.css" media="screen">
     <script class="u-script" type="text/javascript" src="//capp.nicepage.com/assets/jquery-3.5.1.min.js" defer=""></script>
     <script class="u-script" type="text/javascript" src="//capp.nicepage.com/8d2365ca6c95e1464cb560debbd4965f357ed44e/nicepage.js" defer=""></script>
     <meta name="generator" content="Nicepage 6.18.5, nicepage.com">
@@ -29,29 +29,37 @@
   <meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
   <body data-home-page="login_1.html" data-home-page-title="Login_1" data-path-to-root="./" data-include-products="false" class="u-body u-xl-mode" data-lang="pl"><header class="u-clearfix u-header u-header" id="sec-b7ff"><div class="u-clearfix u-sheet u-sheet-1">
         <a href="#" class="u-align-center u-image u-logo u-image-1">
-            <img src="../static/images/default-logo.png" class="u-logo-image u-logo-image-1">
+            <img src="static/images/default-logo.png" class="u-logo-image u-logo-image-1">
         </a>
       </div></header>
-    <section class="u-clearfix u-section-1" id="sec-a36f">
-      <div class="u-clearfix u-sheet u-sheet-1">
-        <h1 class="u-custom-font u-font-montserrat u-text u-text-default u-text-1">E-voting System</h1>
-        <div class="u-form u-login-control u-form-1">
-          <form action="#" class="u-clearfix u-form-custom-backend u-form-spacing-10 u-form-vertical u-inner-form" source="custom" name="form" style="padding: 10px;" method="post">
-            <div class="u-form-group u-form-name u-label-top">
-              <label for="username-a30d" class="u-label">Username *</label>
-              <input type="text" placeholder="Enter your Username" id="username-a30d" name="username" class="u-input u-input-rectangle u-none u-input-1" required="">
+      <section class="u-clearfix u-section-1" id="sec-a36f">
+        <div class="u-clearfix u-sheet u-sheet-1">
+            <h1 class="u-custom-font u-font-montserrat u-text u-text-default u-text-1">E-voting System</h1>
+            <div class="u-form u-login-control u-form-1">
+                <form action="/login" class="u-clearfix u-form-custom-backend u-form-spacing-10 u-form-vertical u-inner-form" source="custom" name="form" style="padding: 10px;" method="POST">
+                    <!-- Username Input -->
+                    <div class="u-form-group u-form-name u-label-top">
+                        <label for="username" class="u-label">Username *</label>
+                        <input type="text" placeholder="Enter your Username" id="username" name="username" class="u-input u-input-rectangle u-none u-input-1" required autocomplete="username">
+                    </div>
+                    <!-- Password Input -->
+                    <div class="u-form-group u-form-password u-label-top">
+                        <label for="password" class="u-label">Password *</label>
+                        <input type="password" placeholder="Enter your Password" id="password" name="password" class="u-input u-input-rectangle u-none u-input-2" required autocomplete="current-password">
+                    </div>
+                    <!-- Submit Button -->
+                    <div class="u-align-left u-form-group u-form-submit u-label-top">
+                        <button type="submit">Login</button>
+                    </div>
+                    <!-- Error Message Display -->
+                    {% if error_message %}
+                    <div class="error-message">
+                        {{ error_message }}
+                    </div>
+                    {% endif %}
+                </form>
             </div>
-            <div class="u-form-group u-form-password u-label-top">
-              <label for="password-a30d" class="u-label">Password *</label>
-              <input type="text" placeholder="Enter your Password" id="password-a30d" name="password" class="u-input u-input-rectangle u-none u-input-2" required="">
-            </div>
-            <div class="u-align-left u-form-group u-form-submit u-label-top">
-              <a href="#" class="u-btn u-btn-submit u-button-style u-btn-1">Login</a>
-              <input type="submit" value="submit" class="u-form-control-hidden">
-            </div>
-          </form>
         </div>
-      </div>
     </section>
     
     
