@@ -1,53 +1,82 @@
 .u-section-1 .u-sheet-1 {
-    min-height: 457px;
-  }
-  
+  min-height: 457px;
+}
+
+.u-section-1 .u-text-1 {
+  background-image: none;
+  margin: 20px auto 0 275px;
+}
+
+.u-section-1 .u-form-1 {
+  height: 294px;
+  width: 570px;
+  margin: 20px auto 53px;
+}
+
+.u-section-1 .u-input-1 {
+  background-image: none;
+}
+
+.u-section-1 .u-input-2 {
+  background-image: none;
+}
+
+/* Styles for the submit button */
+.u-section-1 .u-btn-1 {
+  width: 100%;                   /* Full width */
+  padding: 10px 0;              /* Vertical padding */
+  background-color: #478ac9;     /* Button background color */
+  color: white;                 /* Text color */
+  border: none;                 /* Remove border */
+  border-radius: 5px;          /* Rounded corners */
+  font-size: 16px;              /* Font size */
+  cursor: pointer;              /* Pointer cursor on hover */
+  transition: background-color 0.3s; /* Smooth transition for hover */
+}
+
+.u-section-1 .u-btn-1:hover {
+  background-color: #357b9e;     /* Darker shade on hover */
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
+.u-btn {
+  background-color: #478ac9; /* Button color */
+  color: white; /* Text color */
+  padding: 10px 20px; /* Padding */
+  border: none; /* No border */
+  cursor: pointer; /* Pointer cursor */
+  font-size: 16px; /* Font size */
+}
+.u-btn:hover {
+  background-color: #357b9e; /* Darker shade on hover */
+}
+
+@media (max-width: 991px) {
   .u-section-1 .u-text-1 {
-    background-image: none;
-    margin: 20px auto 0 275px;
+    margin-left: 211px;
   }
-  
+}
+
+@media (max-width: 767px) {
+  .u-section-1 .u-text-1 {
+    margin-left: 158px;
+  }
+
   .u-section-1 .u-form-1 {
-    height: 294px;
-    width: 570px;
-    margin: 20px auto 53px;
+    width: 540px;
   }
-  
-  .u-section-1 .u-input-1 {
-    background-image: none;
+}
+
+@media (max-width: 575px) {
+  .u-section-1 .u-text-1 {
+    margin-left: 99px;
   }
-  
-  .u-section-1 .u-input-2 {
-    background-image: none;
+
+  .u-section-1 .u-form-1 {
+    width: 340px;
   }
-  
-  .u-section-1 .u-btn-1 {
-    width: 100%;
-    padding: 10px 0;
-  }
-  
-  @media (max-width: 991px) {
-    .u-section-1 .u-text-1 {
-      margin-left: 211px;
-    }
-  }
-  
-  @media (max-width: 767px) {
-    .u-section-1 .u-text-1 {
-      margin-left: 158px;
-    }
-  
-    .u-section-1 .u-form-1 {
-      width: 540px;
-    }
-  }
-  
-  @media (max-width: 575px) {
-    .u-section-1 .u-text-1 {
-      margin-left: 99px;
-    }
-  
-    .u-section-1 .u-form-1 {
-      width: 340px;
-    }
-  }
+}
+
