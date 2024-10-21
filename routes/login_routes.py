@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
 import sqlite3
-from datetime import datetime
+from datetime import datetime, timedelta
 from Database_interaction_functions import hash_value
 
 login_blueprint = Blueprint('login', __name__)
@@ -35,11 +35,17 @@ def login():
             voter_id, stored_password, has_voted, failed_attempts, last_failed_attempt = result
             hashed_password = hash_value(password)
 
+            # Converting last_failed_attempt from database to a datetime object
+            if last_failed_attempt: # That means: if `last_failed_attempt` is not None :)
+                last_failed_attempt = datetime.strptime(last_failed_attempt, '%Y-%m-%d %H:%M:%S')
+
             if failed_attempts >= 3 and last_failed_attempt:
-                if today < last_failed_attempt + datetime.timedelta(minutes=1):
+                if today < last_failed_attempt + timedelta(minutes=1):
                     conn.close()
                     return render_template('login_1.html', error_message="Account temporarily blocked.")
                 failed_attempts = 0
+                c.execute('UPDATE voters SET failed_attempts = ? WHERE voter_id = ?', (failed_attempts, voter_id))
+                conn.commit()
 
             if stored_password == hashed_password:
                 session.permanent = True
