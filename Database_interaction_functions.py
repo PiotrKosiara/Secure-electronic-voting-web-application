@@ -50,6 +50,17 @@ def create_database():
         pass
         #conn.close()
 
+def get_candidates():
+    try:
+        conn = sqlite3.connect('voting_system.db')
+        with conn:
+            cursor = conn.execute("SELECT name FROM candidates;")
+            candidates = [row[0] for row in cursor.fetchall()]
+        return candidates
+    except Exception as e:
+        print("An error occurred while fetching candidates:", str(e))
+        return []
+
 
 def hash_value(value):
     return hashlib.sha256(value.encode()).hexdigest()

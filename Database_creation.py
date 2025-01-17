@@ -4,6 +4,8 @@ from Database_interaction_functions import hash_value, encrypt_value
 Database_interaction_functions.create_database()
 Database_interaction_functions.add_candidate("Kandydat_A")
 Database_interaction_functions.add_candidate("Kandydat_B")
+Database_interaction_functions.add_candidate("Kandydat_C")
+
 
 # Only examples
 hashed_jan_id = hash_value("Jan")

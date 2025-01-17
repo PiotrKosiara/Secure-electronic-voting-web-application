@@ -9,9 +9,28 @@ login_2_blueprint = Blueprint('login_2', __name__)
 def main():
     return render_template('login_2.html', error_code=None)
 
+# Nagłówki zabezpieczające przed cofaniem i buforowaniem
+@login_2_blueprint.after_request
+def add_no_cache_headers(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
+
+# Middleware do weryfikacji sesji
+@login_2_blueprint.before_request
+def verify_session():
+    # Sprawdzanie, czy użytkownik jest zalogowany
+    if 'voter_id' not in session:
+        return redirect(url_for('login_1.login_1'))
+
 @login_2_blueprint.route("/login_2", methods=["GET", "POST"])
 def login_2():
     voter_id = session.get('voter_id')
+    if not voter_id:
+        # Jeśli brak `voter_id` w sesji, przekieruj na stronę logowania
+        return redirect(url_for('login_1.login_1'))
+
     print(f"Voter ID from session in login_2: {voter_id}")
     conn = sqlite3.connect('voting_system.db')
     c = conn.cursor()
@@ -19,6 +38,7 @@ def login_2():
         # Dowlanding e-mail adress from database 
         c.execute('SELECT email FROM voters WHERE voter_id = ?', (voter_id,))
         result = c.fetchone()
+
         if result:
             email = result[0]
             print(f"Email found: {email}")
@@ -28,6 +48,7 @@ def login_2():
                 print(f"Verification code sent: {verification_sent}")
                 hashed_verification_sent = hash_value(verification_sent)
                 print(f"Hashed verification_sent: {hashed_verification_sent}")
+
                 query = 'UPDATE voters SET temporary_password = ? WHERE voter_id = ?'
                 c.execute(query, (hashed_verification_sent, voter_id,))
                 conn.commit()
@@ -35,12 +56,14 @@ def login_2():
                 session['verification_sent'] = True
             else:
                 print("Verification code already sent.")
+
             # Logika do obsługi formularza POST, gdzie użytkownik wprowadza kod weryfikacyjny
             if request.method == 'POST':
                 secret_code = request.form.get('code')
                 print(f"Secret code entered by user: {secret_code}")
                 secret_code_hash = hash_value(secret_code)
                 print(f"Hashed secret code entered by user: {secret_code_hash}")
+
                 # Pobieramy kod weryfikacyjny z bazy danych i sprawdzamy
                 c.execute('SELECT temporary_password FROM voters WHERE voter_id = ?', (voter_id,))
                 dump = c.fetchone()
@@ -50,7 +73,9 @@ def login_2():
                     if secret_code_hash == stored_temp_password:
                         print("Verification successful!")
                         conn.close()
+
                         # Czyścimy sesję po udanej weryfikacji
+                        session['verification_sent'] = False
                         session.pop('verification_sent', None)
                         return redirect(url_for('vote.vote'))
                     else:

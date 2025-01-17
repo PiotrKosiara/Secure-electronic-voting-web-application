@@ -61,3 +61,5 @@ def two_step_verification(to):
     message_text = f"Your verification code is: {verification_code}"
     send_email(service, sender, to, subject, message_text)
     return verification_code
+
+#two_step_verification("emilia.anczarska@gmail.com")
