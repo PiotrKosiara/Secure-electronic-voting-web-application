@@ -24,6 +24,11 @@ def verify_session():
     if 'voter_id' not in session:
         return redirect(url_for('login_1.login_1'))
 
+# Obsługa limitu żądań
+@login_2_blueprint.errorhandler(429)
+def ratelimit_handler(e):
+    return render_template("429.html"), 429
+
 @login_2_blueprint.route("/login_2", methods=["GET", "POST"])
 def login_2():
     voter_id = session.get('voter_id')

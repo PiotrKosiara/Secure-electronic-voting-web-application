@@ -12,6 +12,14 @@
         <a href="#" class="u-logo">
             <img src="../static/images/default-logo.png" alt="Logo">
         </a>
+        <script>
+    // Dodanie stanu historii do zapobiegania cofaniu
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+        history.pushState(null, null, location.href);
+    };
+</script>
+
     </header>
 
     <div class="container">

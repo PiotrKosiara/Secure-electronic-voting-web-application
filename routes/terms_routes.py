@@ -2,6 +2,26 @@ from flask import Blueprint, render_template, session, redirect, url_for, reques
 
 terms_blueprint = Blueprint('terms', __name__)
 
+@terms_blueprint.after_request
+def add_no_cache_headers(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
+
+# Middleware do odświeżania sesji
+@terms_blueprint.before_request
+def refresh_session():
+    session.modified = True
+    # Wymuszanie logowania
+    if request.endpoint not in ['login_1.main', 'login_1.login_1'] and 'voter_id' not in session:
+        return redirect(url_for('login_1.login_1'))
+
+# Obsługa limitu żądań
+@terms_blueprint.errorhandler(429)
+def ratelimit_handler(e):
+    return render_template("429.html"), 429
+
 @terms_blueprint.route("/terms", methods=["GET", "POST"])
 def terms():
     voter_id = session.get('voter_id')

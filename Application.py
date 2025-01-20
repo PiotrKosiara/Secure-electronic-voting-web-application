@@ -25,5 +25,5 @@ app.register_blueprint(login_2_blueprint)
 app.register_blueprint(verify_code_blueprint)
 app.register_blueprint(terms_blueprint)
 
-if __name__ == "__main__":
-    app.run(debug=True)
+if __name__ == '__main__':
+    app.run(ssl_context=('cert.pem', 'key.pem'))

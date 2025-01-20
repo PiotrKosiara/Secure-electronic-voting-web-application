@@ -4,6 +4,26 @@ from Database_interaction_functions import hash_value
 
 verify_code_blueprint = Blueprint('verify_code', __name__)
 
+@verify_code_blueprint.after_request
+def add_no_cache_headers(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
+
+# Middleware do odświeżania sesji
+@verify_code_blueprint.before_request
+def refresh_session():
+    session.modified = True
+    # Wymuszanie logowania
+    if request.endpoint not in ['login_1.main', 'login_1.login_1'] and 'voter_id' not in session:
+        return redirect(url_for('login_1.login_1'))
+
+# Obsługa limitu żądań
+@verify_code_blueprint.errorhandler(429)
+def ratelimit_handler(e):
+    return render_template("429.html"), 429
+
 @verify_code_blueprint.route("/verify_code", methods=["GET", "POST"])
 def verify_code():
     print("verify_codeeee!!!!")
@@ -49,6 +69,7 @@ def verify_code():
                         # Czyścimy dane w sesji
                         session.pop('verification_sent', None)
                         session.pop('selected_candidate', None)
+                        session.pop('terms', None)
 
                         return render_template('already_voted.html')
                     else:

@@ -11,6 +11,7 @@ def add_no_cache_headers(response):
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "0"
+    response.headers['Content-Security-Policy'] = "default-src 'self';"
     return response
 
 # Middleware do odświeżania sesji
@@ -34,6 +35,8 @@ def main():
 def login_1():
     # Usunięcie danych sesji związanych z wcześniejszymi próbami weryfikacji
     session.pop('verification_sent', None)
+    session.pop('selected_candidate', None)
+    session.pop('terms', None)
     error_message = None  # Domyślnie brak błędu
 
     if request.method == 'POST':

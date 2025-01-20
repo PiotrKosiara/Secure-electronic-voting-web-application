@@ -6,6 +6,13 @@
     <title>E-voting System</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../static/css/Login_1.css">
+    <script>
+    // Dodanie stanu historii do zapobiegania cofaniu
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+        history.pushState(null, null, location.href);
+    };
+</script>
 </head>
 <body>
     <header>
@@ -17,11 +24,11 @@
     <div class="container">
         <h1>E-voting System</h1>
 
-        <form action="/login_1" class="login-form" method="POST" style="padding: 10px;">
+        <form action="/login_1" class="login-form" method="POST" style="padding: 10px;" autocomplete="off">
     <!-- Username Input -->
         <label for="username" class="u-label">Username *</label>
         <input type="text" placeholder="Enter your Username" id="username" name="username"
-               class="u-input u-input-rectangle u-none u-input-1" required autocomplete="username">
+               class="u-input u-input-rectangle u-none u-input-1" required autocomplete="username" >
 
     <!-- Password Input -->
         <label for="password" class="u-label">Password *</label>
