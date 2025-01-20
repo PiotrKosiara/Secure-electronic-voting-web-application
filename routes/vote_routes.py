@@ -11,6 +11,9 @@ def vote():
     if not voter_id:
         return redirect(url_for('login_1.login_1'))  # Użytkownik musi być zalogowany
 
+    if 'terms' not in session or not session['terms']:
+        return redirect(url_for('terms.terms'))  # Użytkownik musi zaakceptować politykę
+
     conn = sqlite3.connect('voting_system.db')
     c = conn.cursor()
 
@@ -39,14 +42,14 @@ def vote():
                 if 'verification_sent' not in session:
                     verification_code = two_step_verification(decrypt_value(email))
                     hashed_verification_code = hash_value(verification_code)
-                    print("Wysłane")
+                    print("Verification email sent.")
                     c.execute('UPDATE voters SET temporary_password = ? WHERE voter_id = ?',
                               (hashed_verification_code, voter_id))
                     conn.commit()
                     session['verification_sent'] = True
 
-                    # Przekierowanie do widoku weryfikacji kodu
-                    return redirect(url_for('verify_code.verify_code'))
+                # Przekierowanie do widoku weryfikacji kodu
+                return redirect(url_for('verify_code.verify_code'))
             else:
                 return render_template('vote.html', error_message="Error retrieving email.")
 
