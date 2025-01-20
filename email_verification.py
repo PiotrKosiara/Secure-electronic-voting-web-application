@@ -62,4 +62,17 @@ def two_step_verification(to):
     send_email(service, sender, to, subject, message_text)
     return verification_code
 
+def send_vote_confirmation_email(to):
+    # Authenticate the application
+    service = authenticate_gmail()
+    # Email data
+    sender = "votingsystembus@gmail.com"
+    subject = "Vote Confirmation - e-voting system"
+    message_text = f"Thank you for participating in the e-voting system. " \
+                   f"Your vote has been successfully recorded.\n\n" \
+                   f"Best regards,\nE-voting System Team"
+    send_email(service, sender, to, subject, message_text)
+    print(f"Confirmation email sent to {to}")
+
+
 #two_step_verification("emilia.anczarska@gmail.com")

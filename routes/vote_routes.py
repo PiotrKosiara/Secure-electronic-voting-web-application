@@ -30,11 +30,16 @@ def vote():
     if not voter_id:
         return redirect(url_for('login_1.login_1'))  # Użytkownik musi być zalogowany
 
-    if 'terms' not in session or not session['terms']:
-        return redirect(url_for('terms.terms'))  # Użytkownik musi zaakceptować politykę
-
     conn = sqlite3.connect('voting_system.db')
     c = conn.cursor()
+
+    c.execute('SELECT has_voted FROM voters WHERE voter_id = ?', (voter_id,))
+    has_voted = c.fetchone()
+
+    if ('terms' not in session or not session['terms']) and has_voted[0] != 1:
+        return redirect(url_for('terms.terms'))  # Użytkownik musi zaakceptować politykę
+
+
 
     try:
         # Sprawdzamy, czy użytkownik już głosował

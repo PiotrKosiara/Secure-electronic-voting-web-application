@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for
 import sqlite3
-from Database_interaction_functions import hash_value
+from Database_interaction_functions import hash_value, decrypt_value
+from email_verification import send_vote_confirmation_email  # Import funkcji wysyłania e-maila
 
 verify_code_blueprint = Blueprint('verify_code', __name__)
 
@@ -36,10 +37,12 @@ def verify_code():
 
     try:
         # Sprawdzamy, czy użytkownik już głosował
-        c.execute('SELECT has_voted FROM voters WHERE voter_id = ?', (voter_id,))
-        has_voted = c.fetchone()
-        if has_voted and has_voted[0] == 1:
-            return render_template('already_voted.html')
+        c.execute('SELECT has_voted, email FROM voters WHERE voter_id = ?', (voter_id,))
+        voter_data = c.fetchone()
+        if voter_data:
+            has_voted, email = voter_data
+            if has_voted == 1:
+                return render_template('already_voted.html')
 
         if request.method == 'POST':
             print("POST")
@@ -65,6 +68,14 @@ def verify_code():
                         c.execute('UPDATE candidates SET votes = votes + 1 WHERE name = ?', (selected_candidate,))
                         c.execute('UPDATE voters SET has_voted = 1 WHERE voter_id = ?', (voter_id,))
                         conn.commit()
+
+
+                        if email:
+                            try:
+                                send_vote_confirmation_email(decrypt_value(email))
+                                print(f"Potwierdzenie wysłane na adres {email}")
+                            except Exception as e:
+                                print(f"Błąd podczas wysyłania e-maila: {e}")
 
                         # Czyścimy dane w sesji
                         session.pop('verification_sent', None)

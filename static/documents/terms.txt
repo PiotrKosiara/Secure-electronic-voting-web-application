@@ -1,1 +1,24 @@
-loooool
+Terms and Conditions
+
+By using the e-voting system (hereinafter referred to as the "System"), you agree to comply with and be bound by the following terms and conditions.
+Please read them carefully before participating.
+
+1. Eligibility
+Only registered users are allowed to vote. Each voter may cast one vote per election.
+
+2. Voting Process
+Votes are final upon submission and cannot be changed. Sharing credentials or verification codes is prohibited.
+
+3. Confidentiality
+The System ensures voter anonymity and data protection. Misuse or unauthorized access is strictly forbidden.
+
+4. System Integrity
+While we strive to maintain reliability, the System is not liable for disruptions caused by technical issues or external factors.
+
+5. Privacy
+Personal data is collected solely for facilitating the election and will not be shared, except as required by law.
+
+6. Code of Conduct
+Fraud, coercion, or attempts to manipulate the process will result in disqualification or legal action.
+
+By participating, you confirm that you understand and accept these terms.
