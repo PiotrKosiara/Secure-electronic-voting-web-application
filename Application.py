@@ -15,7 +15,7 @@ limiter = Limiter(
     key_func=get_remote_address,
     storage_uri=REDIS_URL,  # Redis jako backend
     app=app,
-    default_limits=["5 per minute"]
+    default_limits=["10 per minute"]
 )
 
 # Register blueprints for routes

@@ -68,7 +68,7 @@ def send_vote_confirmation_email(to):
     # Email data
     sender = "votingsystembus@gmail.com"
     subject = "Vote Confirmation - e-voting system"
-    message_text = f"Thank you for participating in the e-voting system. " \
+    message_text = f"Thank you for participating in the e-voting system. \n" \
                    f"Your vote has been successfully recorded.\n\n" \
                    f"Best regards,\nE-voting System Team"
     send_email(service, sender, to, subject, message_text)
