@@ -3,12 +3,12 @@ import hashlib
 import json
 from cryptography.fernet import Fernet
 
+
 def create_database():
     try:
         conn = sqlite3.connect('voting_system.db')
         with conn:
-            conn.execute("DROP TABLE IF EXISTS logs;")  # Dodano dla czystości danych podczas testów
-
+            conn.execute("DROP TABLE IF EXISTS logs;")
             conn.execute('''CREATE TABLE IF NOT EXISTS logs (
                 log_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 voter_id INTEGER,
@@ -17,8 +17,6 @@ def create_database():
                 timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (voter_id) REFERENCES voters (voter_id)
             );''')
-
-            # Pozostałe zapytania do tworzenia tabel
             conn.execute("DROP TABLE IF EXISTS voters;")
             conn.execute("DROP TABLE IF EXISTS candidates;")
             conn.execute("DROP TABLE IF EXISTS votes;")
@@ -39,8 +37,7 @@ def create_database():
             conn.execute('''
                 CREATE TABLE candidates (
                     candidate_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    name TEXT NOT NULL UNIQUE,
-                    votes INTEGER DEFAULT 0
+                    name TEXT NOT NULL UNIQUE
                 );
             ''')
 
@@ -48,9 +45,8 @@ def create_database():
                 CREATE TABLE votes (
                     vote_id INTEGER PRIMARY KEY AUTOINCREMENT,
                     voter_id INTEGER,
-                    candidate_id INTEGER,
-                    FOREIGN KEY (voter_id) REFERENCES voters (voter_id),
-                    FOREIGN KEY (candidate_id) REFERENCES candidates (candidate_id)
+                    encrypted_vote TEXT NOT NULL,
+                    FOREIGN KEY (voter_id) REFERENCES voters (voter_id)
                 );
             ''')
             conn.commit()
@@ -58,7 +54,7 @@ def create_database():
     except Exception as e:
         print("An error occurred:", str(e))
     finally:
-        pass
+        conn.close()
 
 def log_action(voter_id, action, details=None):
     try:
@@ -87,6 +83,7 @@ def get_candidates():
 
 
 def hash_value(value):
+    print("hash")
     return hashlib.sha256(value.encode()).hexdigest()
 
 def encrypt_value(value):
@@ -94,6 +91,22 @@ def encrypt_value(value):
         stored_data = json.load(key_file)
         stored_key = stored_data['key'].encode('utf-8')
     cipher_suite = Fernet(stored_key)
+    value_2 = str(value).encode()
+    encrypted_value = cipher_suite.encrypt(value_2)
+    return encrypted_value
+
+def encrypt_value_shamir(value):
+    with open('shamir_1.json', 'r') as key_file_1:
+        stored_data_1 = json.load(key_file_1)
+        stored_key_1 = stored_data_1['key'].encode('utf-8')
+    with open('shamir_2.json', 'r') as key_file_2:
+        stored_data_2 = json.load(key_file_2)
+        stored_key_2 = stored_data_2['key'].encode('utf-8')
+    with open('shamir_3.json', 'r') as key_file_3:
+        stored_data_3 = json.load(key_file_3)
+        stored_key_3 = stored_data_3['key'].encode('utf-8')
+    zmienna = stored_key_1 + stored_key_2 + stored_key_3
+    cipher_suite = Fernet(zmienna)
     value_2 = str(value).encode()
     encrypted_value = cipher_suite.encrypt(value_2)
     return encrypted_value
@@ -106,6 +119,20 @@ def decrypt_value(encrypted_value):
     decrypted_value = cipher_suite.decrypt(encrypted_value).decode()
     return decrypted_value
 
+def decrypt_value_shamir(encrypted_value):
+    with open('shamir_1.json', 'r') as key_file_1:
+        stored_data_1 = json.load(key_file_1)
+        stored_key_1 = stored_data_1['key'].encode('utf-8')
+    with open('shamir_2.json', 'r') as key_file_2:
+        stored_data_2 = json.load(key_file_2)
+        stored_key_2 = stored_data_2['key'].encode('utf-8')
+    with open('shamir_3.json', 'r') as key_file_3:
+        stored_data_3 = json.load(key_file_3)
+        stored_key_3 = stored_data_3['key'].encode('utf-8')
+    zmienna = stored_key_1+stored_key_2+stored_key_3
+    cipher_suite = Fernet(zmienna)
+    decrypted_value = cipher_suite.decrypt(encrypted_value).decode()
+    return decrypted_value
 
 def verify_voter_credentials(personal_id, password):
     hashed_personal_id = hash_value(personal_id)
@@ -120,7 +147,7 @@ def verify_voter_credentials(personal_id, password):
     if result:
         stored_password, voter_id, has_voted, failed_attempts = result
 
-        # Blokowanie konta po 3 nieudanych próbach
+        # Blokowanie konta po 3 nieudanych prÃ³bach
         if failed_attempts >= 3:
             log_action(voter_id, "Login Attempt", "Failed: Account locked.")
             print("Account locked due to multiple failed attempts.")
@@ -193,7 +220,7 @@ def cast_vote(voter_id, candidate_id):
     c.execute('SELECT has_voted FROM voters WHERE voter_id = ?', (voter_id,))
     result = c.fetchone()
     if result and result[0] == 0:
-        c.execute('INSERT INTO votes (voter_id, candidate_id) VALUES (?, ?)', (voter_id, candidate_id))
+        # c.execute('INSERT INTO votes (voter_id, candidate_id) VALUES (?, ?)', (voter_id, candidate_id))
         c.execute('UPDATE voters SET has_voted = 1 WHERE voter_id = ?', (voter_id,))
         c.execute('UPDATE candidates SET votes = votes + 1 WHERE candidate_id = ?', (candidate_id,))
         conn.commit()

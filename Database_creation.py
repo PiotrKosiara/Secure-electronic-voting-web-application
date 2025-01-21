@@ -2,9 +2,9 @@ import Database_interaction_functions
 from Database_interaction_functions import hash_value, encrypt_value
 
 Database_interaction_functions.create_database()
-Database_interaction_functions.add_candidate("Kandydat_A")
-Database_interaction_functions.add_candidate("Kandydat_B")
-Database_interaction_functions.add_candidate("Kandydat_C")
+Database_interaction_functions.add_candidate("Candidate_A")
+Database_interaction_functions.add_candidate("Candidate_B")
+Database_interaction_functions.add_candidate("Candidate_C")
 
 
 # Only examples
@@ -31,4 +31,4 @@ Database_interaction_functions.register_voter(hashed_julek_id, hashed_julek_pass
 # Database_interaction_functions.cast_vote(1, 1)
 # Database_interaction_functions.cast_vote(2, 2)
 
-Database_interaction_functions.show_results()
+# Database_interaction_functions.show_results()

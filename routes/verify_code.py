@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for
 import sqlite3
-from Database_interaction_functions import hash_value, decrypt_value, decrypt_value_shamir
+from Database_interaction_functions import hash_value, decrypt_value, decrypt_value_shamir, encrypt_value_shamir
 from email_verification import send_vote_confirmation_email  # Import funkcji wysyłania e-maila
 
 verify_code_blueprint = Blueprint('verify_code', __name__)
@@ -66,7 +66,7 @@ def verify_code():
                     if selected_candidate:
                         # Zapisz głos w bazie danych
                         secret = f"voter_id:{voter_id},candidate:{selected_candidate}"
-                        share = decrypt_value_shamir(secret)
+                        share = encrypt_value_shamir(secret)
                         c.execute('INSERT INTO votes (voter_id, encrypted_vote) VALUES (?, ?)', (voter_id, share))
                         c.execute('UPDATE voters SET has_voted = 1 WHERE voter_id = ?', (voter_id,))
                         conn.commit()
