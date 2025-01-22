@@ -83,7 +83,6 @@ def get_candidates():
 
 
 def hash_value(value):
-    print("hash")
     return hashlib.sha256(value.encode()).hexdigest()
 
 def encrypt_value(value):
